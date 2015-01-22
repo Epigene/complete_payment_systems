@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpsxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.cps.lv/xml/ns/cpsxml"
+        https://3ds.cps.lv/GatorServo/Gator_SendForAuth.xsd
+        xmlns="http://www.cps.lv/xml/ns/cpsxml">
+  <header xmlns="">
+    <responsetype>direct</responsetype>
+    <user>test_merchant_sign</user>
+    <type>sendForAuth</type>
+    <transType>DB</transType>
+    <digiSignature>beOLV8RRek9UoYpwKKUO5tGJXArO0l57rdXxPcYAuLgzRPtPzq80Rk5nwSqJ\ndXzt3yCzGOrbb4QPuZOXiDBl4yEFoRAED6u2FxlbC4giyYwtVRhy/UwSa35r\nLw0f8efNsn8HvwakHp8nFKjxOj5f8r0F/bCChATHaDE9UcaEpPU=
+</digiSignature>
+  </header>
+  <request xmlns="">
+    <orderNumber>9991945</orderNumber>
+    <cardholder>
+      <firstName>Anyname</firstName>
+      <lastName>LastName</lastName>
+      <street>Kronvalda</street>
+      <zip>LV-1050</zip>
+      <city>Riga</city>
+      <country>LV</country>
+      <email>email@domain.com</email>
+      <ip>123.124.125.126</ip>
+    </cardholder>
+    <amount>
+      <value>100</value>
+      <currency>USD</currency>
+    </amount>
+    <product>
+      <productName>Product</productName>
+      <productUrl>www.test.com</productUrl>
+    </product>
+  </request>
+</cpsxml>
