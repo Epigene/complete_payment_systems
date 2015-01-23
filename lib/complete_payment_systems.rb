@@ -1,9 +1,10 @@
 require "complete_payment_systems/version"
-require 'rubygems'
+#require 'rubygems'
 require 'openssl'
 require 'digest/sha1'
 require 'base64'
 require 'unirest'
+require 'active_support/all'
 
 module CompletePaymentSystems
 
@@ -30,6 +31,8 @@ module CompletePaymentSystems
     puts response.body # Parsed body
     puts response.raw_body # Unparsed body
 
+    return "OK" if response.body.to_s.match(/Captured/).present?
+    return "ERROR"
   end
 
   def self.make_xml
@@ -111,9 +114,23 @@ module CompletePaymentSystems
     # ˇˇ
     sign_string = [type, user, order_id, value, currency, card_number, product].join()
 
+    # rsa         = OpenSSL::PKey::RSA.new(File.read("#{CPS.root}/Test_pasta_sign.pem"), keypass )
+    # signature   = Base64.encode64(rsa.sign(OpenSSL::Digest::SHA1.new, sign_string))
+    # return signature
+
     rsa         = OpenSSL::PKey::RSA.new(File.read("#{CPS.root}/Test_pasta_sign.pem"), keypass )
+    #sha1        = OpenSSL::Digest::SHA1.new, sign_string
     signature   = Base64.encode64(rsa.sign(OpenSSL::Digest::SHA1.new, sign_string))
     return signature
+
+    response = "HlcnASe5fZyM7uVz4xwqpe9MF6+pHWXt0Fg9t5tbgmgsjLIzVZMvErzJYsZymiHEnyCbYdbAUcman8JfOP1/LnAvPAhpxz09wNsXBYJcK7YjR+Ktu2faraRfgVG0t8QTjUumk5ayTMIA/IYHvIy+2bDJgmqVQEIctl8mFdn/RyrOFFhSB2aNQwXFP1DA9Ul4c+UyDq1d5AqwGyuevKR3qFodco2DT8eO6PMpRZstecAib2Bjk5tkIY2iNRYTj7TFwtM2ASMXnbYWz82E389/AHTCBpKl4d7o6ewysPjvz4LI1pykvCJRrL10y7HGYKgoo/+JnCp9s9J4iFGx5SVqSA=="
+
+
+
+    # [16] pry(main)> v = OpenSSL::X509::Certificate.new File.read "#{CPS.root}/cps.cer"
+    # => #<OpenSSL::X509::Certificate subject=#<OpenSSL::X509::Name:0x007f9b3da00db8>, issuer=#<OpenSSL::X509::Name:0x007f9b3da00d40>, serial=#<OpenSSL::BN:0x007f9b3da00cc8>, not_before=2014-03-31 10:20:50 UTC, not_after=2016-05-02 21:46:29 UTC>
+    # [17] pry(main)> p = v.public_key
+    # => #<OpenSSL::PKey::RSA:0x007f9b3da38920>
   end
 
   def self.root

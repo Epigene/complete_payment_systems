@@ -7,13 +7,13 @@
     <user>test_pasta_sign</user>
     <type>sendForAuth</type>
     <transType>DB</transType>
-    <digiSignature>fGNHs5xGbcM7YvyKgCQN25+eQGJPJVk0+S0jeuiw1dFxaHaIDvwVgyRprDhg
-n8oWMCsSpr/FyrfWGBkwbtCSYlEXAPkSObiBoepARWKLOgLOdsepFZSgKYku
-t/v0oToqcjy6ywgmLab19MxxhHB0KL+KAuiDYeBFZdjlpgedTGI=
+    <digiSignature>lM3l5r3Jc50fJc4KRTFI51+SfQmNjFjYWQ8okw/UYiRrUoFU4KbPH8q/Ji7f
+nIaYqqzCANBqy4RTnRVEybx4SAC0zaqRuw2qVOuy3TW9VPMI6pGrfAG8I2tx
+/u7mhp+M0OdKvFiagicw5aLrcdkO3Q96eTpA2dIuydrit5TssRo=
 </digiSignature>
   </header>
   <request xmlns="">
-    <orderNumber>1422019383</orderNumber>
+    <orderNumber>1422023959</orderNumber>
     <cardholder>
       <firstName>Test</firstName>
       <lastName>User</lastName>
