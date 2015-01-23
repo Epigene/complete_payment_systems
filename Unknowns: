@@ -1,0 +1,22 @@
+Unknowns:
+
+1. test_merchant_sign (merchant name after logging into MerchantManager)
+   vs test_sign (used in examples)
+
+   SOLUTION: user 'test_sign'
+
+2. how to verify that the signature is alright?
+
+3. what role does the expiry date & CVC2 play if they are not transmitted anyway
+
+  SOLUTION: In Direct request card data is also sent, all OK
+
+4. what role do cardholder enries play?
+      <firstName>Anyname</firstName>
+      <lastName>LastName</lastName>
+
+   what values are to be used in street, zip, city, country, email & IP ??
+
+5. Where is Checkout page template stored, is it a view with a form in our application, posting to https://3ds.cps.lv/GatorServo/request ?
+
+6. tomēr var taisīt transakcijas arī bez bankas maksājuma lapas. šīm nolūkam lūdzu izmantojiet lietotāju test_pasta_sign.
