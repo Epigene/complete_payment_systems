@@ -56,6 +56,12 @@ hash = {
 CPS.build_request_xml(params_hash: hash)
 ```
 
+# Process response
+
+```ruby
+CPS.
+```
+
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/complete_payment_systems/fork )
