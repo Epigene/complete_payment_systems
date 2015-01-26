@@ -1,27 +1,27 @@
 require "complete_payment_systems/version"
+require "complete_payment_systems/xml_parsing"
 #require 'rubygems'
 require 'openssl'
 require 'digest/sha1'
 require 'base64'
 require 'unirest'
 require 'active_support/all'
+require 'nokogiri'
 
 module CompletePaymentSystems
 
   ROOT = File.expand_path("../..", __FILE__)
 
-  class << self
-  end
 
-  def decode signature
 
-  end
+  # class << self
+  # end
+
+  # def decode signature
+
+  # end
 
   def self.unirest
-    # sending_path = "#{CPS.root}/cps.xml"
-    # #a = File.open(sending_path, "rb").read
-    # a = File.read(sending_path)
-
     response = Unirest.post "https://3ds.cps.lv/GatorServo/request",
                         #headers:{ "Accept" => "application/json" },
                         parameters:{ type: "sendForAuth", xml: self.make_xml }
@@ -29,7 +29,6 @@ module CompletePaymentSystems
     puts response.code # Status code
     puts response.headers # Response headers
     puts response.body # Parsed body
-    puts response.raw_body # Unparsed body
 
     return "OK" if response.body.to_s.match(/Captured/).present?
     return "ERROR"
@@ -37,7 +36,7 @@ module CompletePaymentSystems
 
   def self.make_xml
     values = {
-      user: "test_pasta_sign", # "test_pasta_sign" for direct, "pasta_test_3d" for direct with 3D
+      user: "pasta_test_3d", # "test_pasta_sign" for direct, "pasta_test_3d" for direct with 3D
       order: (Time.now.to_i),
       holder_name: "Test",
       holder_surname: "User",
@@ -47,14 +46,15 @@ module CompletePaymentSystems
       holder_country: "LV",
       holder_email: "hi@creo.mobi",
       holder_ip: "123.124.125.226",
-      card_number: "4012001037167778", # For 3D-Secure number is 4314229999999913
-      card_exp: "06/18", # 3D-sec is "01/18"
-      card_cvv: "999", # 3D-sec is "123"
+      card_number: "4314229999999913", # 4012001037167778 for direct, For 3D-Secure number is 4314229999999913
+      card_exp: "01/18", # 06/18 for direct, 3D-sec is "01/18"
+      card_cvv: "123", # 999 for direct, 3D-sec is "123"
       product_name: "Product",
       product_url: "www.test.com"
     }
 
-    values[:signature] = CPS.sign
+    values[:signature] = CPS.sign(user: values[:user], card_number: values[:card_number])
+
     values[:signature_line] = '<digiSignature>' + values[:signature] + '</digiSignature>'
 
     xml_path = "#{CPS.root}/cps.xml"
@@ -69,6 +69,8 @@ module CompletePaymentSystems
       file.write(%Q|    <type>sendForAuth</type>\n|)
       file.write(%Q|    <transType>DB</transType>\n|)
       file.write(%Q|    | + values[:signature_line] + "\n")
+      file.write(%Q|    <callbackUrl>www.google.lv</callbackUrl>\n|)
+      file.write(%Q|    <redirectUrl>http://www.google.lv</redirectUrl>\n|)
       file.write(%Q|  </header>\n|)
       file.write(%Q|  <request xmlns="">\n|)
       file.write(%Q|    <orderNumber>#{values[:order]}</orderNumber>\n|)
@@ -102,35 +104,19 @@ module CompletePaymentSystems
     return File.read(xml_path)
   end
 
-  def self.sign(type: "sendForAuth", user: "test_pasta_sign", order_id: "#{Time.now.to_i}", value: "100", currency: "USD", card_number: "4012001037167778", product: "Product")
+  def self.sign(type: "sendForAuth", user: "pasta_test_3d", order_id: "#{Time.now.to_i}", value: "100", currency: "USD", card_number: "4012001037167778", product: "Product")
+
     keypass = 'pasS%123'
-    # type
-    # user
-    # orderNumber
-    # value
-    # currency
-    # cardNumber (if present)
-    # productName
-    # ˇˇ
     sign_string = [type, user, order_id, value, currency, card_number, product].join()
 
-    # rsa         = OpenSSL::PKey::RSA.new(File.read("#{CPS.root}/Test_pasta_sign.pem"), keypass )
-    # signature   = Base64.encode64(rsa.sign(OpenSSL::Digest::SHA1.new, sign_string))
-    # return signature
+    cert_path = "#{CPS.root}/lib/complete_payment_systems/certs"
+    rsa       = OpenSSL::PKey::RSA.new(File.read("#{cert_path}/Pasta_test_3d.pem"), keypass )
+    puts "Signed hash:"
+    signed_hash = rsa.sign(OpenSSL::Digest::SHA1.new, sign_string)
+    puts "Signature"
+    puts signature = Base64.encode64(signed_hash)
 
-    rsa         = OpenSSL::PKey::RSA.new(File.read("#{CPS.root}/Test_pasta_sign.pem"), keypass )
-    #sha1        = OpenSSL::Digest::SHA1.new, sign_string
-    signature   = Base64.encode64(rsa.sign(OpenSSL::Digest::SHA1.new, sign_string))
     return signature
-
-    response = "HlcnASe5fZyM7uVz4xwqpe9MF6+pHWXt0Fg9t5tbgmgsjLIzVZMvErzJYsZymiHEnyCbYdbAUcman8JfOP1/LnAvPAhpxz09wNsXBYJcK7YjR+Ktu2faraRfgVG0t8QTjUumk5ayTMIA/IYHvIy+2bDJgmqVQEIctl8mFdn/RyrOFFhSB2aNQwXFP1DA9Ul4c+UyDq1d5AqwGyuevKR3qFodco2DT8eO6PMpRZstecAib2Bjk5tkIY2iNRYTj7TFwtM2ASMXnbYWz82E389/AHTCBpKl4d7o6ewysPjvz4LI1pykvCJRrL10y7HGYKgoo/+JnCp9s9J4iFGx5SVqSA=="
-
-
-
-    # [16] pry(main)> v = OpenSSL::X509::Certificate.new File.read "#{CPS.root}/cps.cer"
-    # => #<OpenSSL::X509::Certificate subject=#<OpenSSL::X509::Name:0x007f9b3da00db8>, issuer=#<OpenSSL::X509::Name:0x007f9b3da00d40>, serial=#<OpenSSL::BN:0x007f9b3da00cc8>, not_before=2014-03-31 10:20:50 UTC, not_after=2016-05-02 21:46:29 UTC>
-    # [17] pry(main)> p = v.public_key
-    # => #<OpenSSL::PKey::RSA:0x007f9b3da38920>
   end
 
   def self.root

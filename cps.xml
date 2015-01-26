@@ -4,16 +4,18 @@
         xmlns="http://www.cps.lv/xml/ns/cpsxml">
   <header xmlns="">
     <responsetype>direct</responsetype>
-    <user>test_pasta_sign</user>
+    <user>pasta_test_3d</user>
     <type>sendForAuth</type>
     <transType>DB</transType>
-    <digiSignature>lM3l5r3Jc50fJc4KRTFI51+SfQmNjFjYWQ8okw/UYiRrUoFU4KbPH8q/Ji7f
-nIaYqqzCANBqy4RTnRVEybx4SAC0zaqRuw2qVOuy3TW9VPMI6pGrfAG8I2tx
-/u7mhp+M0OdKvFiagicw5aLrcdkO3Q96eTpA2dIuydrit5TssRo=
+    <digiSignature>NP+o4wK17G3tqcTF5K2vfBjXQ4RpCLEYPoK9I99/9GPQO95fD0Xp+DueUV4c
+AtgNQmQg4C2BTw0vh1fme8PQanaGF50WJOTdgXdU5ygRxkjja4EyA9cDe1cq
+Ex7iqtSazv2FZXu/6RfVgwcoy4SRuNuQrsDqo6/7isJ/BpgppTI=
 </digiSignature>
+    <callbackUrl>www.google.lv</callbackUrl>
+    <redirectUrl>http://www.google.lv</redirectUrl>
   </header>
   <request xmlns="">
-    <orderNumber>1422023959</orderNumber>
+    <orderNumber>1422028510</orderNumber>
     <cardholder>
       <firstName>Test</firstName>
       <lastName>User</lastName>
@@ -25,9 +27,9 @@ nIaYqqzCANBqy4RTnRVEybx4SAC0zaqRuw2qVOuy3TW9VPMI6pGrfAG8I2tx
       <ip>123.124.125.226</ip>
     </cardholder>
     <card>
-      <cardNumber>4012001037167778</cardNumber>
-      <expires>06/18</expires>
-      <cvv>999</cvv>
+      <cardNumber>4314229999999913</cardNumber>
+      <expires>01/18</expires>
+      <cvv>123</cvv>
     </card>
     <amount>
       <value>100</value>
