@@ -1,4 +1,5 @@
 require "complete_payment_systems/version"
+require "complete_payment_systems/request_processing"
 require "complete_payment_systems/response_processing"
 #require 'rubygems'
 require 'openssl'
@@ -27,7 +28,8 @@ module CompletePaymentSystems
   end
 
   class Config
-    attr_accessor :default_user, :default_callback_url, :default_redirect_url, :default_product_name, :default_product_url
+    attr_accessor :default_user, :default_callback_url, :default_redirect_url, :default_product_name, :default_product_url,
+      :placeholder_value, :cps_url, :cps_method, :cert_pass, :rsa_cert_path, :success_regex
 
     def initialize
       @default_user = "pasta_test_3d"
@@ -35,14 +37,20 @@ module CompletePaymentSystems
       @default_redirect_url = "http://www.google.lv"
       @default_product_name = "Product"
       @default_product_url = "www.test.com"
+      @placeholder_value = "PLACEHOLDER"
+
+      @cps_url = "https://3ds.cps.lv/GatorServo/request"
+      @cps_method = "sendForAuth"
+      @cert_pass = 'pasS%123'
+      @rsa_cert_path = "#{CPS.root}/lib/complete_payment_systems/certs/Pasta_test_3d.pem"
+      @success_regex = /Captured/
     end
 
   end
 
   CPS.configure {}
 
-
-
+  # TO-DO Delete this after production checks
   def self.make_xml
     values = {
       user: "pasta_test_3d", # "test_pasta_sign" for direct, "pasta_test_3d" for direct with 3D
@@ -114,8 +122,6 @@ module CompletePaymentSystems
 
     return File.read(xml_path)
   end
-
-
 
 end
 

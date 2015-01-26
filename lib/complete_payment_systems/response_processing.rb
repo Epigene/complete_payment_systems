@@ -4,20 +4,14 @@ module CompletePaymentSystems
     attr_reader :xml, :response_hash, :code, :message
 
     def initialize(xml)
-      if xml.present?
-        puts 'ir'
-      else
-        puts 'nav'
-      end
-
-      @xml = xml || File.read("#{CPS.root}/response.xml") # TO-DO remove this!
+      @xml = xml #|| File.read("#{CPS.root}/response.xml")
       @response_hash = parse_response(@xml)
       @code = @response_hash["resultCode"]
       @message = @response_hash["resultMessage"]
     end
 
     def ok?
-      return signature_ok? && message.match(/Captured/).present? && code == "000"
+      return signature_ok? && message.match(CPS.config.success_regex).present? && code == "000"
     end
 
     def signature_ok?

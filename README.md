@@ -28,31 +28,42 @@ CPS.configure do |config|
   config.default_redirect_url = "http://www.app.com/cps/return"
   config.default_product_name = "Product"
   config.default_product_url = "www.test.com"
+  # Used in client data, like street and zip, if you choose not to ask for these
+  config.placeholder_value = "PLACEHOLDER"
+
+  config.cps_url = "https://3ds.cps.lv/GatorServo/request" # This will probably never change
+  config.cps_method = "sendForAuth" # Thus will also probably remain the same
+  config.cert_pass = 'pasS%123' # your cert chain password
+  config.rsa_cert_path = "#{CPS.root}/lib/complete_payment_systems/certs/Pasta_test_3d.pem" # Your .pem format cert chain location
+
 end
 ```
 
 ### Build a payment request
+Instantiate a CPS::Request object with a params parameter
 ```ruby
 hash = {
   order: (Time.now.to_i),            # Pass the unique purchase ID here
-  holder_name: "Test",               # Ask buyer for this in a form
-  holder_surname: "User",            # Ask buyer for this in a form
+  value: 100     ,                   # Pass the purchase value in cents here (1$ purcase value = 100)
+  currency: (params["currency"]),    # Pass the purchase currency 3-letter code here ($ = "USD")
+  holder_name: "John",               # Ask buyer for this in a form
+  holder_surname: "Doe",             # Ask buyer for this in a form
   card_number: "4314229999999913",   # Ask buyer for this in a form
   card_exp: "01/18",                 # Ask buyer for this in a form
   card_cvv: "123",                   # Ask buyer for this in a form
+  holder_ip: "123.124.125.226",      # Get this from request.remote_ip
   holder_street: "NOT USED",         # (Optional) Ask buyer for this in a form
   holder_zip: "NOT USED",            # (Optional) Ask buyer for this in a form
   holder_city: "NOT USED",           # (Optional) Ask buyer for this in a form
   holder_country: "US",              # (Optional) Ask buyer for this in a form
   holder_email: "test@domain.com",   # (Optional) Ask buyer for this in a form
-  holder_ip: "123.124.125.226",      # (Optional) Ask buyer for this in a form
   user: "Some User"                  # Best defined in config and not passed
   callback_url: "http://www.app.lv", # Best defined in config and not passed
   redirect_url: "http://www.app.lv", # Best defined in config and not passed
   product_name: "Product",           # Best defined in config and not passed
   product_url: "www.test.com"        # Best defined in config and not passed
 }
-CPS.build_request_xml(params_hash: hash)
+CPS::Request.new(hash)
 ```
 # Process response
 Instantiate a CPS::Response object with an xml parameter (get the xml from server response .body)
