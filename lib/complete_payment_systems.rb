@@ -1,5 +1,5 @@
 require "complete_payment_systems/version"
-require "complete_payment_systems/xml_parsing"
+require "complete_payment_systems/response_processing"
 #require 'rubygems'
 require 'openssl'
 require 'digest/sha1'
@@ -10,33 +10,44 @@ require 'nokogiri'
 
 module CompletePaymentSystems
 
+  CPS = CompletePaymentSystems
   ROOT = File.expand_path("../..", __FILE__)
 
-
-
-  # class << self
-  # end
-
-  # def decode signature
-
-  # end
-
-  def self.unirest
-    response = Unirest.post "https://3ds.cps.lv/GatorServo/request",
-                        #headers:{ "Accept" => "application/json" },
-                        parameters:{ type: "sendForAuth", xml: self.make_xml }
-
-    puts response.code # Status code
-    puts response.headers # Response headers
-    puts response.body # Parsed body
-
-    return "OK" if response.body.to_s.match(/Captured/).present?
-    return "ERROR"
+  def self.root
+    ROOT
   end
+
+  class << self
+    attr_accessor :config
+  end
+
+  def self.configure
+    self.config ||= Config.new
+    yield(config)
+  end
+
+  class Config
+    attr_accessor :default_user, :default_callback_url, :default_redirect_url, :default_product_name, :default_product_url
+
+    def initialize
+      @default_user = "pasta_test_3d"
+      @default_callback_url = "http://www.google.com"
+      @default_redirect_url = "http://www.google.lv"
+      @default_product_name = "Product"
+      @default_product_url = "www.test.com"
+    end
+
+  end
+
+  CPS.configure {}
+
+
 
   def self.make_xml
     values = {
       user: "pasta_test_3d", # "test_pasta_sign" for direct, "pasta_test_3d" for direct with 3D
+      callback_url: "http://www.google.lv",
+      redirect_url: "http://www.google.lv",
       order: (Time.now.to_i),
       holder_name: "Test",
       holder_surname: "User",
@@ -69,8 +80,8 @@ module CompletePaymentSystems
       file.write(%Q|    <type>sendForAuth</type>\n|)
       file.write(%Q|    <transType>DB</transType>\n|)
       file.write(%Q|    | + values[:signature_line] + "\n")
-      file.write(%Q|    <callbackUrl>www.google.lv</callbackUrl>\n|)
-      file.write(%Q|    <redirectUrl>http://www.google.lv</redirectUrl>\n|)
+      file.write(%Q|    <callbackUrl>#{values[:callback_url]}</callbackUrl>\n|)
+      file.write(%Q|    <redirectUrl>#{values[:redirect_url]}</redirectUrl>\n|)
       file.write(%Q|  </header>\n|)
       file.write(%Q|  <request xmlns="">\n|)
       file.write(%Q|    <orderNumber>#{values[:order]}</orderNumber>\n|)
@@ -104,24 +115,7 @@ module CompletePaymentSystems
     return File.read(xml_path)
   end
 
-  def self.sign(type: "sendForAuth", user: "pasta_test_3d", order_id: "#{Time.now.to_i}", value: "100", currency: "USD", card_number: "4012001037167778", product: "Product")
 
-    keypass = 'pasS%123'
-    sign_string = [type, user, order_id, value, currency, card_number, product].join()
-
-    cert_path = "#{CPS.root}/lib/complete_payment_systems/certs"
-    rsa       = OpenSSL::PKey::RSA.new(File.read("#{cert_path}/Pasta_test_3d.pem"), keypass )
-    puts "Signed hash:"
-    signed_hash = rsa.sign(OpenSSL::Digest::SHA1.new, sign_string)
-    puts "Signature"
-    puts signature = Base64.encode64(signed_hash)
-
-    return signature
-  end
-
-  def self.root
-    ROOT
-  end
 
 end
 
