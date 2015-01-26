@@ -1,7 +1,7 @@
 module CompletePaymentSystems
   class Response
 
-    attr_accessor :xml, :response_hash, :code, :message
+    attr_reader :xml, :response_hash, :code, :message
 
     def initialize(xml)
       if xml.present?

@@ -17,21 +17,21 @@ Or install it yourself as:
     $ gem install complete_payment_systems
 
 ## Usage
-
-# Configure Defaults
-
-in /config/initializers/cps.rb
+### Configure Defaults
+in */config/initializers/cps.rb*
 ```ruby
 CPS.configure do |config|
   config.default_user = "pasta_test_3d" # Your CPS account user
-  config.default_callback_url = "http://www.app.com/cps/process" # server-to-server POST response processing route
-  config.default_redirect_url = "http://www.app.com/cps/return" # Url to "Thank-you"-"Retry" differ route
+  # server-to-server POST response processing route
+  config.default_callback_url = "http://www.app.com/cps/process"
+  # Url to "Thank-you"-"Retry" differ route
+  config.default_redirect_url = "http://www.app.com/cps/return"
   config.default_product_name = "Product"
   config.default_product_url = "www.test.com"
 end
 ```
 
-# Build payment request
+### Build a payment request
 ```ruby
 hash = {
   order: (Time.now.to_i),            # Pass the unique purchase ID here
@@ -52,14 +52,36 @@ hash = {
   product_name: "Product",           # Best defined in config and not passed
   product_url: "www.test.com"        # Best defined in config and not passed
 }
-
 CPS.build_request_xml(params_hash: hash)
 ```
-
 # Process response
+Instantiate a CPS::Response object with an xml parameter (get the xml from server response .body)
+```ruby
+@response = CPS.Response.new(request_response.body)
+```
+API exposes reader methods #xml, #response_hash, #code, #message
+as well as convenience methods #ok? and #signature_ok?
 
 ```ruby
-CPS.
+r = CPS::Response.new(valid_xml_response)
+r.response_hash
+  => {"referenceId"=>"9095359",
+ "orderId"=>"1422019383",
+ "value"=>"100",
+ "currency"=>"USD",
+ "resultCode"=>"000",
+ "resultMessage"=>"Captured",
+ "resultText"=>"Captured",
+ "digiSignature"=>
+  "HlcnASe5fZyM7uVz4xwqp ... XGx5SVqSA=="}
+r.code
+  => "000"
+r.message
+  => "Captured"
+r.signature_ok?
+  => true
+r.ok?
+  => true
 ```
 
 ## Contributing
@@ -73,7 +95,3 @@ CPS.
 ## Dev Notes
 
 calbackUrl atbilde atnāks pirmā, jo te mēs sūtam atbildi pa tiešo no mūsu servera uz jūso noradītu URL
-
-# self.build_request_xml
-
-Takes one argument - params_hash
