@@ -43,7 +43,7 @@ module CompletePaymentSystems
           holder_street: (params["holder_street"] || CPS.config.placeholder_value),
           holder_zip: (params["holder_zip"] || CPS.config.placeholder_value),
           holder_city: (params["holder_city"] || CPS.config.placeholder_value),
-          holder_country: (params["holder_country"] || "US" ),
+          holder_country: (params["holder_country"] || CPS.config.default_country),
           holder_email: (params["holder_email"] || CPS.config.placeholder_value),
           holder_ip: ( params["holder_ip"] ),
           card_number: params["card_number"], # 4012001037167778 for direct, For 3D-Secure number is 4314229999999913

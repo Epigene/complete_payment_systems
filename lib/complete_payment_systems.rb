@@ -28,8 +28,8 @@ module CompletePaymentSystems
   end
 
   class Config
-    attr_accessor :default_user, :default_callback_url, :default_redirect_url, :default_product_name, :default_product_url,
-      :placeholder_value, :cps_url, :cps_method, :cert_pass, :rsa_cert_path, :success_regex
+    attr_accessor :default_user, :default_callback_url, :default_redirect_url, :default_product_name, :default_product_url, :default_country, :placeholder_value,
+      :cps_url, :cps_method, :cert_pass, :rsa_cert_path, :success_regex
 
     def initialize
       @default_user = "pasta_test_3d"
@@ -37,6 +37,7 @@ module CompletePaymentSystems
       @default_redirect_url = "http://www.google.lv"
       @default_product_name = "Product"
       @default_product_url = "www.test.com"
+      @default_country = "US"
       @placeholder_value = "PLACEHOLDER"
 
       @cps_url = "https://3ds.cps.lv/GatorServo/request"
