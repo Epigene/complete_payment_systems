@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Epigene"]
   spec.email         = ["augusts.bautra@gmail.com"]
   spec.summary       = %q{A client for CPS (Complete Payment Systems) card payment service}
-  spec.description   = %q{Coming soon...}
+  spec.description   = %q{CPS (Complete Payment Systems) card payment service API in Ruby}
   spec.homepage      = ""
   spec.license       = "MIT"
 

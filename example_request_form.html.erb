@@ -1,0 +1,13 @@
+<html>
+ <head>
+ </head>
+ <body onload="document.cpsForm.submit();" style="display:none;">
+ <form method="POST" name="cpsForm" action="<%= CPS.config.cps_url %>">
+ <input name="type" value="<%= CPS.config.cps_method %>">
+ <textarea name="xml">
+<%= @cps_request.xml %>
+</textarea>
+ <input type="submit" value="Send">
+ </form>
+ </body>
+</html>

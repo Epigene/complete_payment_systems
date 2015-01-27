@@ -52,10 +52,8 @@ module CompletePaymentSystems
 
   CPS.configure {}
 
-end
-
-CPS = CompletePaymentSystems
-hash = {
+  def self.return_test_instance
+    hash = {
       order: (Time.now.to_i),            # Pass the unique purchase ID here
       value: "166",                      # Pass the purchase value in cents here (1$ purcase value = 100)
       currency: "USD",    # Pass the purchase currency 3-letter code here ($ = "USD")
@@ -67,4 +65,10 @@ hash = {
       holder_ip: "123.124.125.226"       # Get this from request.remote_ip
     }
 
-CPS::XX = CPS::Request.new(hash)
+    return CPS::Request.new(hash)
+
+  end
+
+end
+
+CPS = CompletePaymentSystems

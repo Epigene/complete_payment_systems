@@ -1,6 +1,17 @@
 # CompletePaymentSystems
 
-TODO: Write a gem description
+Ruby gem for a simple CPS (Complete Payment Systems) service API - creates request XML from a parameters hash, processes the response.
+
+Only direct-3D payments supported for now.
+
+###### Workflow Overview:
+1. Install gem, congifure defaults
+2. Build an appropriate parameter hash using user-entered card values
+3. Instantiate CPS::Request object passing the hash as the single argument
+4. Pass the request instance to the form view (see /example_request_form.html.erb)
+5. Capture the CPS server response in a controller action that listens on _config.default_callback_url_
+6. Based on the response (@response.ok?) change order status
+7. Based on order status, process user return experience at _config.default_redirect_url_
 
 ## Installation
 

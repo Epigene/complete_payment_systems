@@ -4,7 +4,7 @@ module CompletePaymentSystems
     attr_reader :xml, :response_hash, :code, :message
 
     def initialize(xml)
-      @xml = xml #|| File.read("#{CPS.root}/response.xml")
+      @xml = xml
       @response_hash = parse_response(@xml)
       @code = @response_hash["resultCode"]
       @message = @response_hash["resultMessage"]
@@ -49,9 +49,5 @@ module CompletePaymentSystems
       end
 
   end
-
-  # def self.read_test_xml
-  #   return File.read("#{CPS.root}/response.xml")
-  # end
 
 end

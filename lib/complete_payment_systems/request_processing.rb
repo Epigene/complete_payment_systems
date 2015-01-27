@@ -30,15 +30,6 @@ module CompletePaymentSystems
       end
 
       def build_request_xml
-        puts "before param init:"
-        puts params
-        puts "After param init:"
-        params = self.params
-        puts params
-
-        puts params["value"]
-        puts params[:value]
-
         values = {
           user: (params[:user] || CPS.config.default_user), # "test_pasta_sign" for direct, "pasta_test_3d" for direct with 3D
           callback_url: (params[:callback_url] || CPS.config.default_callback_url),
@@ -60,8 +51,6 @@ module CompletePaymentSystems
           product_name: (params[:product_name] || CPS.config.default_product_name),
           product_url: (params[:product_url] || CPS.config.default_product_url)
         }
-
-        puts values # TESTING
 
         values[:signature] = sign(order_id: values[:order], value: values[:value], currency: values[:currency], card_number: values[:card_number]).gsub(/\n/, '')
 
