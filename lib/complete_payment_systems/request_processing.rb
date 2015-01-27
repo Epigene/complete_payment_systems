@@ -22,7 +22,7 @@ module CompletePaymentSystems
     end
 
     private
-      def self.sign(type: CPS.config.cps_method, user: CPS.config.default_user, order_id: , value: , currency: , card_number: , product: CPS.config.default_product_name)
+      def self.sign(type: CPS.config.cps_method, user: CPS.config.default_user, order_id: "", value: "", currency: "", card_number: "", product: CPS.config.default_product_name)
         sign_string = [type, user, order_id, value, currency, card_number, product].join()
         rsa         = OpenSSL::PKey::RSA.new(File.read(CPS.config.rsa_cert_path), CPS.config.cert_pass )
         signed_hash = rsa.sign(OpenSSL::Digest::SHA1.new, sign_string)
