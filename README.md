@@ -87,7 +87,7 @@ hash = {
 CPS::Request.new(hash)
 ```
 # Process response
-Instantiate a CPS::Response object with an xml parameter (get the xml from server response .body)
+Instantiate a CPS::Response object with an xml parameter (get the xml from server response.body)
 ```ruby
 @response = CPS.Response.new(request_response.body)
 ```
@@ -129,6 +129,7 @@ r.ok?
 calbackUrl atbilde atnāks pirmā, jo te mēs sūtam atbildi pa tiešo no mūsu servera uz jūso noradītu URL
 
 #### Direct-3D request example
+```ruby
 hash = {
   order: (Time.now.to_i),            # Pass the unique purchase ID here
   value: 166,                        # Pass the purchase value in cents here (1$ purcase value = 100)
@@ -151,4 +152,4 @@ hash = {
   product_url: "www.test.com"        # Best defined in config and not passed
 }
 @request = CPS::Request.new(hash)
-
+```
