@@ -38,7 +38,7 @@ CPS.configure do |config|
   config.default_country = "US"
 
   # Used in client data, like street and zip, if you choose not to ask for these
-  config.placeholder_value = "PLACEHOLDER"
+  config.placeholder_value = "Not@Used.com"
 
   config.cps_url = "https://3ds.cps.lv/GatorServo/request" # This will probably never change
   config.cps_method = "sendForAuth" # This will also probably remain the same
@@ -50,7 +50,7 @@ end
 ```
 
 ### Build a payment request
-Instantiate a CPS::Request object, passit a hash with parameters:
+Instantiate a CPS::Request object, pass it a hash with parameters:
 ```ruby
 hash = {
   order: (Time.now.to_i),            # Pass the unique purchase ID here
