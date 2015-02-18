@@ -87,9 +87,9 @@ hash = {
 CPS::Request.new(hash)
 ```
 # Process response
-Instantiate a CPS::Response object with an xml parameter (get the xml from server response.body)
+Instantiate a CPS::Response object with an xml parameter (get the xml from `params` hash)
 ```ruby
-@response = CPS.Response.new(request_response.body)
+@response = CPS.Response.new(params[:xmlResponse])
 ```
 API exposes reader methods #xml, #response_hash, #code, #message
 as well as convenience methods #ok? and #signature_ok?
