@@ -157,8 +157,12 @@ This will use the xml from production code, but post it to test server on button
 ```
 ### Use development config
 Set return urls to use a domain that points to localhost, such as lvh.me
-  c.default_callback_url = "http://lvh.me:3000/pay/cps/"
-  c.default_redirect_url = "http://lvh.me:3000/pay/cps/"
+  `config.default_callback_url = "http://lvh.me:3000/pay/cps/"`
+  `config.default_redirect_url = "http://lvh.me:3000/pay/cps/"`
+For 3D test purchases set
+  `config.default_user = "pasta_test_3d"`
+For non-3D test purchases set
+  `config.default_user = "testa_pasta_sign"`
 
 ### Use CPS-given test cards
 Access http://wiki.cps.lv/index.php/Test_account (Login and Pass required)
