@@ -92,7 +92,7 @@ def create
   
 end
 ```
-# 
+# Build a posting form for create method
 ```ruby
 <html>
  <head>
