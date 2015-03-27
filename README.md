@@ -137,6 +137,32 @@ r.signature_ok?
 r.ok?
   => true
 ```
+## Testing setup
+### Use testing create sending form
+This will use the xml from production code, but post it to test server on button press, allowing you to debug
+```ruby
+<html>
+ <head>
+ </head>
+ <body>
+ <form method="POST" action="https://3ds.cps.lv/GatorServo/request">
+ <input name="type" value="sendForAuth">
+ <textarea name="xml">
+<%= @cps_request.xml %>
+ </textarea>
+ <input type="submit" value="Send">
+ </form>
+ </body>
+</html>
+```
+### Use development config
+Set return urls to use a domain that points to localhost, such as lvh.me
+  c.default_callback_url = "http://lvh.me:3000/pay/cps/"
+  c.default_redirect_url = "http://lvh.me:3000/pay/cps/"
+
+### Use CPS-given test cards
+Access http://wiki.cps.lv/index.php/Test_account (Login and Pass required)
+Use examples given there (NB, use test currency, USD)
 
 ## Contributing
 
