@@ -63,28 +63,50 @@ end
 ### Build a payment request
 Instantiate a CPS::Request object, pass it a hash with parameters:
 ```ruby
-hash = {
-  order: (Time.now.to_i),            # Pass the unique purchase ID here
-  value: 100     ,                   # Pass the purchase value in cents here (1$ purcase value = 100)
-  currency: "EUR",                   # Pass the purchase currency 3-letter code here ($ = "USD")
-  holder_name: "John",               # Ask buyer for this in a form
-  holder_surname: "Doe",             # Ask buyer for this in a form
-  card_number: "4314229999999913",   # Ask buyer for this in a form
-  card_exp: "01/18",                 # Ask buyer for this in a form
-  card_cvv: "123",                   # Ask buyer for this in a form
-  holder_ip: "123.124.125.226",      # Get this from request.remote_ip
-  holder_street: "NOT USED",         # (Optional) Ask buyer for this in a form
-  holder_zip: "NOT USED",            # (Optional) Ask buyer for this in a form
-  holder_city: "NOT USED",           # (Optional) Ask buyer for this in a form
-  holder_country: "US",              # (Optional) Ask buyer for this in a form
-  holder_email: "test@domain.com",   # (Optional) Ask buyer for this in a form
-  user: "Some User"                  # Best defined in config and not passed
-  callback_url: "http://www.app.lv", # Best defined in config and not passed
-  redirect_url: "http://www.app.lv", # Best defined in config and not passed
-  product_name: "Product",           # Best defined in config and not passed
-  product_url: "www.test.com"        # Best defined in config and not passed
-}
-CPS::Request.new(hash)
+def create
+
+  hash = {
+    order: (Time.now.to_i),            # Pass the unique purchase ID here
+    value: 100     ,                   # Pass the purchase value in cents here (1$ purcase value = 100)
+    currency: "EUR",                   # Pass the purchase currency 3-letter code here ($ = "USD")
+    holder_name: "John",               # Ask buyer for this in a form
+    holder_surname: "Doe",             # Ask buyer for this in a form
+    card_number: "4314229999999913",   # Ask buyer for this in a form
+    card_exp: "01/18",                 # Ask buyer for this in a form
+    card_cvv: "123",                   # Ask buyer for this in a form
+    holder_ip: "123.124.125.226",      # Get this from request.remote_ip
+    holder_street: "NOT USED",         # (Optional) Ask buyer for this in a form
+    holder_zip: "NOT USED",            # (Optional) Ask buyer for this in a form
+    holder_city: "NOT USED",           # (Optional) Ask buyer for this in a form
+    holder_country: "US",              # (Optional) Ask buyer for this in a form
+    holder_email: "test@domain.com",   # (Optional) Ask buyer for this in a form
+    user: "Some User"                  # Best defined in config and not passed
+    callback_url: "http://www.app.lv", # Best defined in config and not passed
+    redirect_url: "http://www.app.lv", # Best defined in config and not passed
+    product_name: "Product",           # Best defined in config and not passed
+    product_url: "www.test.com"        # Best defined in config and not passed
+  }
+  
+  # Passed to view which silently submits a form to CPS server
+  @cps_request = CPS::Request.new(hash)
+  
+end
+```
+# 
+```ruby
+<html>
+ <head>
+ </head>
+ <body onload="document.cpsForm.submit();" style="display:none;">
+ <form method="POST" name="cpsForm" action="<%= CPS.config.cps_url %>">
+ <input name="type" value="<%= CPS.config.cps_method %>">
+ <textarea name="xml">
+<%= @cps_request.xml %>
+</textarea>
+ <input type="submit" value="Send">
+ </form>
+ </body>
+</html>
 ```
 # Process response
 Instantiate a CPS::Response object with an xml parameter (get the xml from `params` hash)
