@@ -5,8 +5,8 @@ Ruby gem for a simple CPS (Complete Payment Systems) service API - creates reque
 Only direct-3D payments supported for now.
 
 ###### Workflow Overview:
-1. Install gem, congifure defaults
-2. Build an appropriate parameter hash using user-entered card values
+1. Install gem, configure defaults
+2. Build an appropriate parameter hash using user-entered card values and defaults
 3. Instantiate CPS::Request object passing the hash as the single argument
 4. Pass the request instance to the form view (see /example_request_form.html.erb)
 5. Capture the CPS server response in a controller action that listens on _config.default_callback_url_
@@ -15,34 +15,27 @@ Only direct-3D payments supported for now.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'complete_payment_systems'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install complete_payment_systems
+Add gem to gemfile and bundle
+```
+gem 'complete_payment_systems'
+$ bundle
+```
 
 ## Usage
 
 The complete module name is CompletePaymentSystems, but the aliased shorthand CPS is recommended.
 
 ### Configure Defaults
-in */config/initializers/cps.rb*
-
 ```ruby
+# in /config/initializers/cps.rb
 CPS.configure do |config|
   # Your CPS account user
   config.default_user = "pasta_test_3d"
 
-  # server-to-server POST response processing route
+  # POST response callback url
   config.default_callback_url = "http://www.app.com/cps/process"
 
-  # Url to "Thank-you"-"Retry" differ route
+  # GET redirect callback url
   config.default_redirect_url = "http://www.app.com/cps/return"
   config.default_product_name = "Product"
   config.default_product_url = "www.test.com"
@@ -66,8 +59,8 @@ Instantiate a CPS::Request object, pass it a hash with parameters:
 def create
 
   hash = {
-    order: (Time.now.to_i),            # Pass the unique purchase ID here
-    value: 100     ,                   # Pass the purchase value in cents here (1$ purcase value = 100)
+    order: 3581276,                    # Pass the unique purchase ID here
+    value: 100     ,                   # Pass the purchase value in cents here (1$ purchase value = 100)
     currency: "EUR",                   # Pass the purchase currency 3-letter code here ($ = "USD")
     holder_name: "John",               # Ask buyer for this in a form
     holder_surname: "Doe",             # Ask buyer for this in a form
@@ -175,33 +168,3 @@ Use examples given there (NB, use test currency, USD)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
-
-## Dev Notes
-
-calbackUrl atbilde atnāks pirmā, jo te mēs sūtam atbildi pa tiešo no mūsu servera uz jūso noradītu URL
-
-#### Direct-3D request example
-```ruby
-hash = {
-  order: (Time.now.to_i),            # Pass the unique purchase ID here
-  value: 166,                        # Pass the purchase value in cents here (1$ purcase value = 100)
-  currency: (params["currency"]),    # Pass the purchase currency 3-letter code here ($ = "USD")
-  holder_name: "John",               # Ask buyer for this in a form
-  holder_surname: "Doe",             # Ask buyer for this in a form
-  card_number: "4314229999999913",   # Ask buyer for this in a form
-  card_exp: "01/18",                 # Ask buyer for this in a form
-  card_cvv: "123",                   # Ask buyer for this in a form
-  holder_ip: "123.124.125.226",      # Get this from request.remote_ip
-  holder_street: "NOT USED",         # (Optional) Ask buyer for this in a form
-  holder_zip: "NOT USED",            # (Optional) Ask buyer for this in a form
-  holder_city: "NOT USED",           # (Optional) Ask buyer for this in a form
-  holder_country: "US",              # (Optional) Ask buyer for this in a form
-  holder_email: "test@domain.com",   # (Optional) Ask buyer for this in a form
-  user: "Some User"                  # Best defined in config and not passed
-  callback_url: "http://www.app.lv", # Best defined in config and not passed
-  redirect_url: "http://www.app.lv", # Best defined in config and not passed
-  product_name: "Product",           # Best defined in config and not passed
-  product_url: "www.test.com"        # Best defined in config and not passed
-}
-@request = CPS::Request.new(hash)
-```
